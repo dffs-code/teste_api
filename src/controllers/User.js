@@ -1,9 +1,9 @@
+const { response } = require('express');
 const database = require('../database');
 const User = require('../models/User');
 
-class UserController{
-
-  async create(req, res){
+module.exports = {
+    async create(req, res){
     try {
         await database.sync();
         await User.create({
@@ -15,7 +15,7 @@ class UserController{
     } catch (error) {
         console.log(error);
     }
-  }
+  },
 
   async find(req, res){
     try {
@@ -27,11 +27,15 @@ class UserController{
         selectedUsers = await User.findByPk(req.body.id)
       }
       
-      res.status(201).json(selectedUsers)
+      if(!selectedUsers){
+        res.status(404).json({
+          mensagem: "não existe esse user"
+        })
+      }else {
+        res.status(201).json(selectedUsers)
+      }
     } catch (error) {
       console.log(error);
     }
   }
-
-};
-module.exports = UserController;
+}
