@@ -1,9 +1,8 @@
-const { response } = require('express');
+const { req, res } = require('express');
 const express = require('express');
 const app = express();
-const port = 3000;
-const userController = require('./controllers/user')
-app.listen(port, () => {
+app.use(express.json())
+app.listen(3000, () => {
   console.log(`Servidor Rodando`);
 });
 
@@ -20,14 +19,14 @@ app.get('/users', async (req, res) => {
   }
 });
 
-app.post('/', async (req, res) => {
+app.post('/user', async (req, res) => {
   const database = require('./database');
   const User = require('./models/user')
 
   try {
       await database.sync();
-      const resultadoCreate = await User.create({
-        nome: 'funciona'
+      await User.create({
+        nome: req.body.nome
       })
       res.status(201).json({
         mensagem: "Dados Gravados com sucesso"
