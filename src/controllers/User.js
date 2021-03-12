@@ -1,13 +1,14 @@
-const { response } = require('express');
 const database = require('../database');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     async create(req, res){
     try {
         await database.sync();
         await User.create({
-          nome: req.body.nome
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 10)
         })
         res.status(201).json({
           mensagem: "Dados Gravados com sucesso"
@@ -37,5 +38,35 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+
+  async delete(req, res) {
+    await database.sync();
+    await User.destroy({
+      where: {
+        id: req.body.id
+      }
+    })
+
+    res.status(200).json({
+      mensagem: "usuário deletado: " + req.body.id
+    })
+  },
+
+  async updateUser(req, res) {
+    await User.update({
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 10),
+      isActive: req.body.isActive,
+      isTeacher: req.body.isTeacher
+    }, {
+      where: {
+        id: req.body.id
+      }
+    })
+
+    res.status(200).json({
+      mensagem:"deu certo"
+    })
   }
 }

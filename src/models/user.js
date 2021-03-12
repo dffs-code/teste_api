@@ -8,10 +8,23 @@ const User = database.define('user', {
         allowNull: false,
         primaryKey: true
     },
-    nome: {
+    email: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    isActive: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 1
+    },
+    isTeacher: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0,
+        allowNull: false
     }
-})
+});
 
 module.exports = User;
