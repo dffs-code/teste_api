@@ -14,7 +14,9 @@ module.exports = {
           mensagem: "Dados Gravados com sucesso"
         })
     } catch (error) {
-        console.log(error);
+        res.status(400).json({
+          error: "Email já cadastrado"
+        })
     }
   },
 
@@ -68,5 +70,23 @@ module.exports = {
     res.status(200).json({
       mensagem:"deu certo"
     })
-  }
+  },
+
+  async login(req, res) {
+      try{
+      var selectedUser
+      var funcionou = false;
+      await database.sync();
+      selectedUser = await User.findOne({
+        where: {
+          email: req.body.email
+        }
+      })
+      res.status(200).json({
+        funcionou: "consegui pegar um email específico, só falta a senha"
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  } 
 }

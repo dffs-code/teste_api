@@ -10,7 +10,9 @@ const User = database.define('user', {
     },
     email: {
         type: Sequelize.STRING,
-        allowNull: false
+        validate: { isEmail: true },
+        unique: true,
+        allowNull: false,
     },
     password: {
         type: Sequelize.STRING,
@@ -25,6 +27,13 @@ const User = database.define('user', {
         defaultValue: 0,
         allowNull: false
     }
+},{
+    indexes: [
+        {
+            unique: true,
+            fields: ['email']
+        }
+    ]
 });
 
 module.exports = User;
